@@ -6,7 +6,7 @@ import StaticServer from 'react-native-static-server';
 
 import RNFetchBlob from "react-native-fetch-blob"
 
-import { zip, unzip, unzipAssets, subscribe } from 'react-native-zip-archive'
+import ZipArchive from 'react-native-zip-archive'
 
 
 // import { readFileSync } from "fs";
@@ -74,7 +74,7 @@ class EpubStreamer {
         const targetPath = `${Dirs.DocumentDir}/${this.root}/${filename}`;
         const url = `${this.serverOrigin}/${filename}/`;
 
-        return unzip(sourcePath, targetPath)
+        return ZipArchive.unzip(sourcePath, targetPath)
           .then((path) => {
 
             this.urls.push(bookUrl);
@@ -90,7 +90,7 @@ class EpubStreamer {
 
   check(bookUrl) {
     const filename = this.filename(bookUrl);
-    const targetPath = `${Dirs.DocumentDir}/${filename}`;
+    const targetPath = `${Dirs.DocumentDir}/${this.root}/${filename}`;
 
     return RNFetchBlob.fs.exists(targetPath);
   }
