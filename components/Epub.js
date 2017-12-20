@@ -1,4 +1,4 @@
-var _jsxFileName="/home/wic/www/ad/rn/myepubjsrn/src/Epub.js";var _createClass=function(){function defineProperties(target,props){for(var i=0;i<props.length;i++){var descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if("value"in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();var _react=require("react");var _react2=_interopRequireDefault(_react);
+var _createClass=function(){function defineProperties(target,props){for(var i=0;i<props.length;i++){var descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if("value"in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();var _react=require("react");var _react2=_interopRequireDefault(_react);
 
 var _reactNative=require("react-native");
 
@@ -49,155 +49,48 @@ height:bounds.height,
 orientation:"PORTRAIT"};return _this;
 
 
-}_createClass(Epub,[{key:"componentDidMount",value:function componentDidMount()
+}_createClass(Epub,[{key:"render",value:function render()
 
-{
-this.active=true;
-this._isMounted=true;
-_reactNative.AppState.addEventListener('change',this._handleAppStateChange.bind(this));
 
-_reactNativeOrientation2.default.addSpecificOrientationListener(this._orientationDidChange.bind(this));
-var orientation=_reactNativeOrientation2.default.getInitialOrientation();
-if(orientation&&(orientation==="PORTRAITUPSIDEDOWN"||orientation==="UNKNOWN")){
-orientation="PORTRAIT";
-this.setState({orientation:orientation});
-}else if(orientation){
-this.setState({orientation:orientation});
-}else if(orientation===null){
 
-orientation=this.state.width>this.state.height?"LANDSCAPE":"PORTRAIT";
-this.setState({orientation:orientation});
-}
 
 
-if(this.props.src){
-this._loadBook(this.props.src);
-}
-}},{key:"componentWillUnmount",value:function componentWillUnmount()
 
-{
-this._isMounted=false;
 
-_reactNative.AppState.removeEventListener('change',this._handleAppStateChange);
-_reactNativeOrientation2.default.removeSpecificOrientationListener(this._orientationDidChange);
-clearTimeout(this.orientationTimeout);
 
-this.destroy();
-}},{key:"shouldComponentUpdate",value:function shouldComponentUpdate(
 
-nextProps,nextState){
 
-if(nextState.show!==this.state.show){
-return true;
-}
 
-if(nextProps.width!==this.props.width||
-nextProps.height!==this.props.height){
-return true;
-}
 
-if(nextState.width!==this.state.width||
-nextState.height!==this.state.height){
-return true;
-}
 
 
-if(nextProps.color!=this.props.color){
-return true;
-}
 
-if(nextProps.backgroundColor!=this.props.backgroundColor){
-return true;
-}
 
-if(nextProps.size!=this.props.size){
-return true;
-}
 
-if(nextProps.flow!=this.props.flow){
-return true;
-}
 
-if(nextProps.origin!=this.props.origin){
-return true;
-}
 
-if(nextProps.orientation!=this.props.orientation){
-return true;
-}
 
-if(nextProps.src!=this.props.src){
-return true;
-}
 
-if(nextProps.onPress!=this.props.onPress){
-return true;
-}
 
-if(nextProps.onLongPress!=this.props.onLongPress){
-return true;
-}
 
-if(nextProps.stylesheet!=this.props.stylesheet){
-return true;
-}
 
-if(nextProps.javascript!=this.props.javascript){
-return true;
-}
 
-return false;
-}},{key:"componentWillUpdate",value:function componentWillUpdate(
 
-nextProps){
-if(nextProps.src!==this.props.src){
-this.destroy();
-}
-}},{key:"componentDidUpdate",value:function componentDidUpdate(
 
-prevProps){
 
-if(prevProps.src!==this.props.src){
-this._loadBook(this.props.src);
-}else if(prevProps.orientation!==this.props.orientation){
-_orientationDidChange(this.props.orientation);
-}
-}},{key:"_orientationDidChange",value:function _orientationDidChange(
 
 
-orientation){
-var wait=10;
-var _orientation=orientation;
 
-if(!this.active||!this._isMounted)return;
 
-if(orientation==="PORTRAITUPSIDEDOWN"||orientation==="UNKNOWN"){
-_orientation="PORTRAIT";
-}
 
-if(orientation==="LANDSCAPE-RIGHT"||orientation==="LANDSCAPE-LEFT"){
-_orientation="LANDSCAPE";
-}
 
-if(this.state.orientation===_orientation){
-return;
-}
 
 
-__DEV__&&console.log("orientation",_orientation);
 
-this.setState({orientation:_orientation});
-this.props.onOrientationChanged&&this.props.onOrientationChanged(_orientation);
-}},{key:"_loadBook",value:function _loadBook(
 
-bookUrl){
-__DEV__&&console.log("loading book: ",bookUrl);
 
-this.book=(0,_epubjs2.default)({
-replacements:this.props.base64||"none"});
 
 
-return this._openBook(bookUrl);
 
 
 
@@ -217,108 +110,213 @@ return this._openBook(bookUrl);
 
 
 
-}},{key:"_openBook",value:function _openBook(
 
-bookUrl,useBase64){var _this2=this;
-var type=useBase64?"base64":null;
 
-if(!this.rendition){
-this.needsOpen=[bookUrl,useBase64];
-return;
-}
 
-this.book.open(bookUrl).
-catch(function(err){
-console.error(err);
-});
 
-this.book.ready.then(function(){
-_this2.isReady=true;
-_this2.props.onReady&&_this2.props.onReady(_this2.book);
-});
 
-this.book.loaded.navigation.then(function(nav){
-if(!_this2.active||!_this2._isMounted)return;
-_this2.setState({toc:nav.toc});
-_this2.props.onNavigationReady&&_this2.props.onNavigationReady(nav.toc);
-});
 
-if(this.props.generateLocations!=false){
-this.loadLocations().then(function(locations){
-_this2.rendition.setLocations(locations);
 
-_this2.props.onLocationsReady&&_this2.props.onLocationsReady(_this2.book.locations);
-});
-}
 
-}},{key:"loadLocations",value:function loadLocations()
 
-{var _this3=this;
-return this.book.ready.then(function(){
 
-var key=_this3.book.key()+"-locations";
 
-return _reactNative.AsyncStorage.getItem(key).then(function(stored){
-if(_this3.props.regenerateLocations!=true&&stored!==null){
-return _this3.book.locations.load(stored);
-}else{
-return _this3.book.locations.generate(_this3.props.locationsCharBreak||600).then(function(locations){
 
-_reactNative.AsyncStorage.setItem(key,_this3.book.locations.save());
-return locations;
-});
-}
-});
 
-});
-}},{key:"onRelocated",value:function onRelocated(
 
-visibleLocation){
-this._visibleLocation=visibleLocation;
 
-if(this.props.onLocationChange){
-this.props.onLocationChange(visibleLocation);
-}
-}},{key:"visibleLocation",value:function visibleLocation()
 
-{
-return this._visibleLocation;
-}},{key:"getRange",value:function getRange(
 
-cfi){
-return this.book.getRange(cfi);
-}},{key:"_handleAppStateChange",value:function _handleAppStateChange(
 
-appState){
-if(appState==="active"){
-this.active=true;
-}
 
-if(appState==="background"){
-this.active=false;
-}
 
-if(appState==="inactive"){
-this.active=false;
-}
-}},{key:"destroy",value:function destroy()
 
-{
-if(this.book){
-this.book.destroy();
-}
-}},{key:"render",value:function render()
 
-{var _this4=this;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{var _this2=this;
 return(
 _react2.default.createElement(Rendition,{
 ref:function ref(r){
-_this4.rendition=r;
+_this2.rendition=r;
 
-if(_this4.needsOpen){
-_this4._openBook.apply(_this4,_this4.needsOpen);
-_this4.needsOpen=undefined;
-}
+
+
+
+
 },
 url:this.props.src,
 flow:this.props.flow,
@@ -337,11 +335,11 @@ theme:this.props.theme,
 fontSize:this.props.fontSize,
 font:this.props.font,
 display:this.props.location,
-onRelocated:this.onRelocated.bind(this),
+
 orientation:this.state.orientation,
 backgroundColor:this.props.backgroundColor,
 onError:this.props.onError,
-onDisplayed:this.props.onDisplayed,__source:{fileName:_jsxFileName,lineNumber:314}}));
+onDisplayed:this.props.onDisplayed}));
 
 
 }}]);return Epub;}(_react.Component);

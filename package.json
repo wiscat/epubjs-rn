@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node EpubReader/node_modules/react-native/local-cli/cli.js start",
     "contents": "webpack --config contents/webpack.config.js",
-    "prepublish": "gulp build"
+    "build": "NODE_ENV=production gulp build",
+    "prepublish": "npm run build"
   },
   "license": "BSD-2-Clause",
   "dependencies": {

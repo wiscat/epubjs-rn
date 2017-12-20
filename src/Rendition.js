@@ -4,21 +4,28 @@ import {
   StyleSheet,
   View,
   ActivityIndicator,
-  AsyncStorage,
-  Dimensions,
+  // AsyncStorage,
+  // Dimensions,
   Platform,
-  AppState,
+  // AppState,
   WebView,
   TouchableOpacity
 } from "react-native";
 
 import WKWebView from 'react-native-wkwebview-reborn-fchasen';
 
-import EventEmitter from 'event-emitter'
+// import EventEmitter from 'event-emitter'
 
 import { readFileSync } from "fs";
 
-const URL = require("epubjs/libs/url/url-polyfill.js");
+import sourceMap from 'source-map';
+
+const generator = new sourceMap.SourceMapGenerator({
+  file: "../node_modules/epubjs/dist/epub.min.js",
+  // sourceRoot: "http://example.com/app/js/"
+});
+
+// const URL = require("epubjs/libs/url/url-polyfill.js");
 const POLYFILL = readFileSync(__dirname + "/../node_modules/core-js/client/core.min.js", "utf8");
 const EPUBJS = readFileSync(__dirname + "/../node_modules/epubjs/dist/epub.min.js", "utf8");
 const BRIDGE = readFileSync(__dirname + "/../contents/bridge.js", "utf8");
@@ -111,38 +118,38 @@ class Rendition extends Component {
       "minSpreadWidth": this.props.minSpreadWidth || 800,
       "flow": this.props.flow || "paginated",
     };
-
-    if (this.props.stylesheet) {
-      config.stylesheet = this.props.stylesheet;
-    }
-
-    if (this.props.webviewStylesheet) {
-      config.webviewStylesheet = this.props.webviewStylesheet;
-    }
-
-    if (this.props.script) {
-      config.script = this.props.script;
-    }
+    //
+    // if (this.props.stylesheet) {
+    //   config.stylesheet = this.props.stylesheet;
+    // }
+    //
+    // if (this.props.webviewStylesheet) {
+    //   config.webviewStylesheet = this.props.webviewStylesheet;
+    // }
+    //
+    // if (this.props.script) {
+    //   config.script = this.props.script;
+    // }
 
     this.sendToBridge("open", [bookUrl, config]);
 
     this.display(this.props.display);
-
-    if (this.props.themes) {
-      this.themes(this.props.themes);
-    }
-
-    if (this.props.theme) {
-      this.theme(this.props.theme);
-    }
-
-    if (this.props.fontSize) {
-      this.fontSize(this.props.fontSize);
-    }
-
-    if (this.props.font) {
-      this.font(this.props.font);
-    }
+    //
+    // if (this.props.themes) {
+    //   this.themes(this.props.themes);
+    // }
+    //
+    // if (this.props.theme) {
+    //   this.theme(this.props.theme);
+    // }
+    //
+    // if (this.props.fontSize) {
+    //   this.fontSize(this.props.fontSize);
+    // }
+    //
+    // if (this.props.font) {
+    //   this.font(this.props.font);
+    // }
   }
 
   display(target) {
@@ -162,71 +169,73 @@ class Rendition extends Component {
   flow(f) {
     this.sendToBridge("flow", [f]);
   }
-
-  themes(t) {
-    this.sendToBridge("themes", [t]);
-  }
-
-  theme(t) {
-    this.sendToBridge("theme", [t]);
-  }
-
-  font(f) {
-    this.sendToBridge("font", [f]);
-  }
-
-  fontSize(f) {
-    this.sendToBridge("fontSize", [f]);
-  }
-
+  //
+  // themes(t) {
+  //   this.sendToBridge("themes", [t]);
+  // }
+  //
+  // theme(t) {
+  //   this.sendToBridge("theme", [t]);
+  // }
+  //
+  // font(f) {
+  //   this.sendToBridge("font", [f]);
+  // }
+  //
+  // fontSize(f) {
+  //   this.sendToBridge("fontSize", [f]);
+  // }
+  //
   setLocations(locations) {
     this.locations = locations;
     if (this.isReady) {
       this.sendToBridge("setLocations", [this.locations]);
     }
   }
-
-  reportLocation() {
-    if (this.isReady) {
-      this.sendToBridge("reportLocation");
-    }
-  }
-
-  highlight (cfiRange, data) {
-    this.sendToBridge("highlight", [cfiRange, data]);
-  }
-
-  underline (cfiRange, data) {
-    this.sendToBridge("underline", [cfiRange, data]);
-  }
-
-  mark (cfiRange, data) {
-    this.sendToBridge("mark", [cfiRange, data]);
-	}
-
-  unhighlight (cfiRange, data) {
-    this.sendToBridge("removeAnnotation", [cfiRange, data]);
-	}
-
-	ununderline (cfiRange, data) {
-    this.sendToBridge("removeAnnotation", [cfiRange, data]);
-	}
-
-	unmark (cfiRange, data) {
-    this.sendToBridge("removeAnnotation", [cfiRange, data]);
-	}
-
-  destroy() {
-
-  }
-
-  postMessage(str) {
-    if (this.refs.webviewbridge) {
-      return this.refs.webviewbridge.postMessage(str);
-    }
-  }
+  //
+  // reportLocation() {
+  //   if (this.isReady) {
+  //     this.sendToBridge("reportLocation");
+  //   }
+  // }
+  //
+  // highlight (cfiRange, data) {
+  //   this.sendToBridge("highlight", [cfiRange, data]);
+  // }
+  //
+  // underline (cfiRange, data) {
+  //   this.sendToBridge("underline", [cfiRange, data]);
+  // }
+  //
+  // mark (cfiRange, data) {
+  //   this.sendToBridge("mark", [cfiRange, data]);
+  // }
+  //
+  // unhighlight (cfiRange, data) {
+  //   this.sendToBridge("removeAnnotation", [cfiRange, data]);
+  // }
+  //
+  // ununderline (cfiRange, data) {
+  //   this.sendToBridge("removeAnnotation", [cfiRange, data]);
+  // }
+  //
+  // unmark (cfiRange, data) {
+  //   this.sendToBridge("removeAnnotation", [cfiRange, data]);
+  // }
+  //
+  // destroy() {
+  //
+  // }
+  //
+  // postMessage(str) {
+  //   if (this.refs.webviewbridge) {
+  //     return this.refs.webviewbridge.postMessage(str);
+  //   }
+  // }
 
   sendToBridge(method, args, promiseId) {
+    __DEV__ && console.log('sendToBridge', method, args, promiseId);
+
     var str = JSON.stringify({
       method: method,
       args: args,
@@ -249,6 +258,9 @@ class Rendition extends Component {
 
   _onBridgeMessage(e) {
     var msg = e.nativeEvent.data;
+
+    __DEV__ && console.log('_onBridgeMessage', msg);
+
     var decoded;
     if (typeof msg === "string") {
       decoded = JSON.parse(msg);
@@ -280,83 +292,83 @@ class Rendition extends Component {
         }
         break;
       }
-      case "relocated": {
-        let {location} = decoded;
-        this._relocated(location);
-        if (!this.state.loaded) {
-          this.setState({loaded: true});
-        }
-        break;
-      }
-      case "resized": {
-        let {size} = decoded;
-        // console.log("resized", size.width, size.height);
-        break;
-      }
+      // case "relocated": {
+      //   let {location} = decoded;
+      //   this._relocated(location);
+      //   if (!this.state.loaded) {
+      //     this.setState({loaded: true});
+      //   }
+      //   break;
+      // }
+      // case "resized": {
+      //   let {size} = decoded;
+      //   // console.log("resized", size.width, size.height);
+      //   break;
+      // }
       case "press": {
         this.props.onPress && this.props.onPress(decoded.cfi, this);
         break;
       }
-      case "longpress": {
-        this.props.onLongPress && this.props.onLongPress(decoded.cfi, this);
-        break;
-      }
-      case "selected": {
-        let {cfiRange} = decoded;
-        this._selected(cfiRange);
-        break;
-      }
-      case "markClicked": {
-        let {cfiRange, data} = decoded;
-        this._markClicked(cfiRange, data);
-        break;
-      }
-      case "added": {
-        let {sectionIndex} = decoded;
-        this.props.onViewAdded && this.props.onViewAdded(sectionIndex);
-        break;
-      }
-      case "removed": {
-        let {sectionIndex} = decoded;
-        this.props.beforeViewRemoved && this.props.beforeViewRemoved(sectionIndex);
-        break;
-      }
-      case "ready": {
-        this._ready();
-        break;
-      }
+      // case "longpress": {
+      //   this.props.onLongPress && this.props.onLongPress(decoded.cfi, this);
+      //   break;
+      // }
+      // case "selected": {
+      //   let {cfiRange} = decoded;
+      //   this._selected(cfiRange);
+      //   break;
+      // }
+      // case "markClicked": {
+      //   let {cfiRange, data} = decoded;
+      //   this._markClicked(cfiRange, data);
+      //   break;
+      // }
+      // case "added": {
+      //   let {sectionIndex} = decoded;
+      //   this.props.onViewAdded && this.props.onViewAdded(sectionIndex);
+      //   break;
+      // }
+      // case "removed": {
+      //   let {sectionIndex} = decoded;
+      //   this.props.beforeViewRemoved && this.props.beforeViewRemoved(sectionIndex);
+      //   break;
+      // }
+      // case "ready": {
+      //   this._ready();
+      //   break;
+      // }
       default: {
         console.log("msg", decoded);
       }
     }
   }
 
-  _relocated(visibleLocation) {
-    this._visibleLocation = visibleLocation;
-    if (this.props.onRelocated) {
-      this.props.onRelocated(visibleLocation, this);
-    }
-  }
-
-  _selected(cfiRange) {
-    if (this.props.onSelected) {
-      this.props.onSelected(cfiRange, this);
-    }
-  }
-
-  _markClicked(cfiRange, data) {
-    if (this.props.onMarkClicked) {
-      this.props.onMarkClicked(cfiRange, data, this);
-    }
-  }
-
-  _ready() {
-    this.isReady = true;
-    if (this.locations) {
-      this.sendToBridge("setLocations", [this.locations]);
-    }
-    this.props.onDisplayed && this.props.onDisplayed();
-  }
+  // _relocated(visibleLocation) {
+  //   this._visibleLocation = visibleLocation;
+  //   if (this.props.onRelocated) {
+  //     this.props.onRelocated(visibleLocation, this);
+  //   }
+  // }
+  //
+  // _selected(cfiRange) {
+  //   if (this.props.onSelected) {
+  //     this.props.onSelected(cfiRange, this);
+  //   }
+  // }
+  //
+  // _markClicked(cfiRange, data) {
+  //   if (this.props.onMarkClicked) {
+  //     this.props.onMarkClicked(cfiRange, data, this);
+  //   }
+  // }
+  //
+  // _ready() {
+  //   this.isReady = true;
+  //   if (this.locations) {
+  //     this.sendToBridge("setLocations", [this.locations]);
+  //   }
+  //   this.props.onDisplayed && this.props.onDisplayed();
+  // }
 
   render() {
     const WebViewer = (Platform.OS === 'ios') ? WKWebView : WebView;
@@ -389,7 +401,6 @@ class Rendition extends Component {
           }]}
           scalesPageToFit={false}
           bounces={false}
-          javaScriptEnabled={true}
           scrollEnabled={true}
           javaScriptEnabled={true}
           pagingEnabled={this.props.flow === "paginated"}
@@ -432,6 +443,6 @@ const styles = StyleSheet.create({
   }
 });
 
-EventEmitter(Rendition.prototype);
+// EventEmitter(Rendition.prototype);
 
 module.exports = Rendition;

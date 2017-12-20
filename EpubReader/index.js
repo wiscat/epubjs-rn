@@ -78,7 +78,11 @@ class EpubReader extends Component {
                 // console.log("Table of Contents", book.toc)
                 this.setState({
                   title : book.package.metadata.title,
-                  toc: book.toc
+                });
+              }}
+              onNavigationReady={(toc)=> {
+                this.setState({
+                  toc,
                 });
               }}
               onPress={(cfi, rendition)=> {
@@ -136,7 +140,7 @@ class EpubReader extends Component {
                 }
                />
             </View>
-            <View
+            {/*<View
               style={[styles.bar, { bottom:0 }]}>
               <BottomBar
                 disabled= {this.state.sliderDisabled}
@@ -147,7 +151,7 @@ class EpubReader extends Component {
                     this.setState({location: value.toFixed(6)})
                   }
                 }/>
-            </View>
+            </View>*/}
             <View>
               <Nav ref="nav"
                 display={(loc) => {
@@ -155,7 +159,6 @@ class EpubReader extends Component {
                 }}
                 toc={this.state.toc}
               />
-
             </View>
       </View>
 

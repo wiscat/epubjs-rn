@@ -56,7 +56,7 @@ gulp.task("copy:contents", function () {
 });
 
 gulp.task("watch", function () {
-	return gulp.watch('./src/**/*.js', ['build', 'copy', 'copy:package']);
+	return gulp.watch(['./src/**/*.js', './contents/**/*.js'], ['build', 'copy', 'copy:package']);
 });
 
 gulp.task("watch:epubjs", function () {
