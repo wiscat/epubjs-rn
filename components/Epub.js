@@ -49,8 +49,12 @@ height:bounds.height,
 orientation:"PORTRAIT"};return _this;
 
 
-}_createClass(Epub,[{key:"render",value:function render()
+}_createClass(Epub,[{key:"componentDidMount",value:function componentDidMount()
 
+{
+this.active=true;
+this._isMounted=true;
+_reactNative.AppState.addEventListener('change',this._handleAppStateChange.bind(this));
 
 
 
@@ -66,11 +70,20 @@ orientation:"PORTRAIT"};return _this;
 
 
 
+if(this.props.src){
+this._loadBook(this.props.src);
+}
+}},{key:"componentWillUnmount",value:function componentWillUnmount()
 
+{
+this._isMounted=false;
 
+_reactNative.AppState.removeEventListener('change',this._handleAppStateChange);
 
 
 
+this.destroy();
+}},{key:"componentWillUpdate",value:function componentWillUpdate(
 
 
 
@@ -136,8 +149,19 @@ orientation:"PORTRAIT"};return _this;
 
 
 
+nextProps){
+if(nextProps.src!==this.props.src){
+this.destroy();
+}
+}},{key:"componentDidUpdate",value:function componentDidUpdate(
 
+prevProps){
+if(prevProps.src!==this.props.src){
+this._loadBook(this.props.src);
+}else if(prevProps.orientation!==this.props.orientation){
 
+}
+}},{key:"_loadBook",value:function _loadBook(
 
 
 
@@ -165,9 +189,14 @@ orientation:"PORTRAIT"};return _this;
 
 
 
+bookUrl){
+__DEV__&&console.log("loading book: ",bookUrl);
 
+this.book=(0,_epubjs2.default)({
+replacements:this.props.base64||"none"});
 
 
+return this._openBook(bookUrl);
 
 
 
@@ -187,16 +216,44 @@ orientation:"PORTRAIT"};return _this;
 
 
 
+}},{key:"_openBook",value:function _openBook(
 
+bookUrl,useBase64){var _this2=this;
 
 
+if(!this.rendition){
+this.needsOpen=[bookUrl,useBase64];
+return;
+}
 
+this.book.open(bookUrl).
+catch(function(err){
+console.error(err);
+});
 
+this.book.ready.then(function(){
 
+_this2.props.onReady&&_this2.props.onReady(_this2.book);
+});
 
+this.book.loaded.navigation.then(function(nav){
+if(!_this2.active||!_this2._isMounted)return;
+_this2.setState({toc:nav.toc});
+_this2.props.onNavigationReady&&_this2.props.onNavigationReady(nav.toc);
+});
 
+if(this.props.generateLocations!=false){
+this.loadLocations().then(function(locations){
+_this2.rendition.setLocations(locations);
+_this2.rendition.reportLocation();
+_this2.props.onLocationsReady&&_this2.props.onLocationsReady(_this2.book.locations);
+});
+}
+}},{key:"loadLocations",value:function loadLocations()
 
 
+{var _this3=this;
+return this.book.ready.then(function(){
 
 
 
@@ -204,11 +261,16 @@ orientation:"PORTRAIT"};return _this;
 
 
 
+return _this3.book.locations.generate(_this3.props.locationsCharBreak||600).then(function(locations){
 
 
+return locations;
+});
 
 
 
+});
+}},{key:"_handleAppStateChange",value:function _handleAppStateChange(
 
 
 
@@ -226,97 +288,36 @@ orientation:"PORTRAIT"};return _this;
 
 
 
+appState){
+if(appState==="active"){
+this.active=true;
+}
 
+if(appState==="background"){
+this.active=false;
+}
 
+if(appState==="inactive"){
+this.active=false;
+}
+}},{key:"destroy",value:function destroy()
 
+{
+if(this.book){
+this.book.destroy();
+}
+}},{key:"render",value:function render()
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-{var _this2=this;
+{var _this4=this;
 return(
 _react2.default.createElement(Rendition,{
 ref:function ref(r){
-_this2.rendition=r;
+_this4.rendition=r;
 
-
-
-
-
+if(_this4.needsOpen){
+_this4._openBook.apply(_this4,_this4.needsOpen);
+_this4.needsOpen=undefined;
+}
 },
 url:this.props.src,
 flow:this.props.flow,

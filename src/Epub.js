@@ -44,46 +44,46 @@ class Epub extends Component {
     this.state = {
       toc: [],
       show: false,
-      width : bounds.width,
-      height : bounds.height,
+      width: bounds.width,
+      height: bounds.height,
       orientation: "PORTRAIT"
     }
 
   }
 
-  // componentDidMount() {
-  //   this.active = true;
-  //   this._isMounted = true;
-  //   AppState.addEventListener('change', this._handleAppStateChange.bind(this));
-  //
-  //   Orientation.addSpecificOrientationListener(this._orientationDidChange.bind(this));
-  //   let orientation = Orientation.getInitialOrientation();
-  //   if (orientation && (orientation === "PORTRAITUPSIDEDOWN" || orientation === "UNKNOWN")) {
-  //     orientation = "PORTRAIT";
-  //     this.setState({orientation})
-  //   } else if (orientation) {
-  //     this.setState({orientation})
-  //   } else if (orientation === null) {
-  //     // Android starts as null
-  //     orientation = this.state.width > this.state.height ? "LANDSCAPE" : "PORTRAIT";
-  //     this.setState({orientation})
-  //   }
-  //   // __DEV__ && console.log("inital orientation", orientation, this.state.width, this.state.height)
-  //
-  //   if (this.props.src) {
-  //     this._loadBook(this.props.src);
-  //   }
-  // }
+  componentDidMount() {
+    this.active = true;
+    this._isMounted = true;
+    AppState.addEventListener('change', this._handleAppStateChange.bind(this));
 
-  // componentWillUnmount() {
-  //   this._isMounted = false;
-  //
-  //   AppState.removeEventListener('change', this._handleAppStateChange);
-  //   Orientation.removeSpecificOrientationListener(this._orientationDidChange);
-  //   clearTimeout(this.orientationTimeout);
-  //
-  //   this.destroy();
-  // }
+    // Orientation.addSpecificOrientationListener(this._orientationDidChange.bind(this));
+    // let orientation = Orientation.getInitialOrientation();
+    // if (orientation && (orientation === "PORTRAITUPSIDEDOWN" || orientation === "UNKNOWN")) {
+    //   orientation = "PORTRAIT";
+    //   this.setState({orientation})
+    // } else if (orientation) {
+    //   this.setState({orientation})
+    // } else if (orientation === null) {
+    //   // Android starts as null
+    //   orientation = this.state.width > this.state.height ? "LANDSCAPE" : "PORTRAIT";
+    //   this.setState({orientation})
+    // }
+    // __DEV__ && console.log("inital orientation", orientation, this.state.width, this.state.height)
+
+    if (this.props.src) {
+      this._loadBook(this.props.src);
+    }
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
+
+    AppState.removeEventListener('change', this._handleAppStateChange);
+    // Orientation.removeSpecificOrientationListener(this._orientationDidChange);
+    // clearTimeout(this.orientationTimeout);
+
+    this.destroy();
+  }
 
   // shouldComponentUpdate(nextProps, nextState) {
   //
@@ -149,19 +149,19 @@ class Epub extends Component {
   //   return false;
   // }
 
-  // componentWillUpdate(nextProps) {
-  //   if (nextProps.src !== this.props.src) {
-  //     this.destroy();
-  //   }
-  // }
-  //
-  // componentDidUpdate(prevProps) {
-  //   if (prevProps.src !== this.props.src) {
-  //     this._loadBook(this.props.src);
-  //   } else if (prevProps.orientation !== this.props.orientation) {
-  //     _orientationDidChange(this.props.orientation);
-  //   }
-  // }
+  componentWillUpdate(nextProps) {
+    if (nextProps.src !== this.props.src) {
+      this.destroy();
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.src !== this.props.src) {
+      this._loadBook(this.props.src);
+    } else if (prevProps.orientation !== this.props.orientation) {
+      // _orientationDidChange(this.props.orientation);
+    }
+  }
 
   // LANDSCAPE PORTRAIT UNKNOWN PORTRAITUPSIDEDOWN
   // _orientationDidChange(orientation) {
@@ -189,87 +189,88 @@ class Epub extends Component {
   //   this.props.onOrientationChanged && this.props.onOrientationChanged(_orientation);
   // }
 
-  // _loadBook(bookUrl) {
-  //   __DEV__ && console.log("loading book: ", bookUrl);
-  //
-  //   this.book = ePub({
-  //     replacements: this.props.base64 || "none"
-  //   });
-  //
-  //   return this._openBook(bookUrl);
-  //
-  //   /*
-  //   var type = this.book.determineType(bookUrl);
-  //
-  //   var uri = new Uri(bookUrl);
-  //   if ((type === "directory") || (type === "opf")) {
-  //     return this._openBook(bookUrl);
-  //   } else {
-  //     return this.streamer.start()
-  //     .then((localOrigin) => {
-  //       this.setState({localOrigin})
-  //       return this.streamer.get(bookUrl);
-  //     })
-  //     .then((localUrl) => {
-  //       this.setState({localUrl})
-  //       return this._openBook(localUrl);
-  //     });
-  //   }
-  //   */
-  // }
+  _loadBook(bookUrl) {
+    __DEV__ && console.log("loading book: ", bookUrl);
 
-  // _openBook(bookUrl, useBase64) {
-  //   var type = useBase64 ? "base64" : null;
-  //
-  //   if (!this.rendition) {
-  //     this.needsOpen = [bookUrl, useBase64];
-  //     return;
-  //   }
-  //
-  //   this.book.open(bookUrl)
-  //     .catch((err) => {
-  //       console.error(err);
-  //     })
-  //
-  //   this.book.ready.then(() => {
-  //     this.isReady = true;
-  //     this.props.onReady && this.props.onReady(this.book);
-  //   });
-  //
-  //   this.book.loaded.navigation.then((nav) => {
-  //     if(!this.active || !this._isMounted) return;
-  //     this.setState({toc : nav.toc});
-  //     this.props.onNavigationReady && this.props.onNavigationReady(nav.toc);
-  //   });
-  //
-  //   // if (this.props.generateLocations != false) {
-  //   //   this.loadLocations().then((locations) => {
-  //   //     this.rendition.setLocations(locations);
-  //   //     // this.rendition.reportLocation();
-  //   //     this.props.onLocationsReady && this.props.onLocationsReady(this.book.locations);
-  //   //   });
-  //   // }
-  // }
-  //
-  // loadLocations() {
-  //   return this.book.ready.then(() => {
-  //     // Load in stored locations from json or local storage
-  //     var key = this.book.key()+"-locations";
-  //
-  //     return AsyncStorage.getItem(key).then((stored) => {
-  //       if (this.props.regenerateLocations != true && stored !== null){
-  //         return this.book.locations.load(stored);
-  //       } else {
-  //         return this.book.locations.generate(this.props.locationsCharBreak || 600).then((locations) => {
-  //           // Save out the generated locations to JSON
-  //           AsyncStorage.setItem(key, this.book.locations.save());
-  //           return locations;
-  //         });
-  //       }
-  //     })
-  //
-  //   });
-  // }
+    this.book = ePub({
+      replacements: this.props.base64 || "none"
+    });
+
+    return this._openBook(bookUrl);
+
+    /*
+    var type = this.book.determineType(bookUrl);
+
+    var uri = new Uri(bookUrl);
+    if ((type === "directory") || (type === "opf")) {
+      return this._openBook(bookUrl);
+    } else {
+      return this.streamer.start()
+      .then((localOrigin) => {
+        this.setState({localOrigin})
+        return this.streamer.get(bookUrl);
+      })
+      .then((localUrl) => {
+        this.setState({localUrl})
+        return this._openBook(localUrl);
+      });
+    }
+    */
+  }
+
+  _openBook(bookUrl, useBase64) {
+    // var type = useBase64 ? "base64" : null;
+
+    if (!this.rendition) {
+      this.needsOpen = [bookUrl, useBase64];
+      return;
+    }
+
+    this.book.open(bookUrl)
+      .catch((err) => {
+        console.error(err);
+      });
+
+    this.book.ready.then(() => {
+      // this.isReady = true;
+      this.props.onReady && this.props.onReady(this.book);
+    });
+
+    this.book.loaded.navigation.then((nav) => {
+      if (!this.active || !this._isMounted) return;
+      this.setState({ toc: nav.toc });
+      this.props.onNavigationReady && this.props.onNavigationReady(nav.toc);
+    });
+
+    if (this.props.generateLocations != false) {
+      this.loadLocations().then((locations) => {
+        this.rendition.setLocations(locations);
+        this.rendition.reportLocation();
+        this.props.onLocationsReady && this.props.onLocationsReady(this.book.locations);
+      });
+    }
+  }
+
+
+  loadLocations() {
+    return this.book.ready.then(() => {
+      // Load in stored locations from json or local storage
+      // var key = this.book.key()+"-locations";
+
+      // return AsyncStorage.getItem(key).then((stored) => {
+        // if (this.props.regenerateLocations != true && stored !== null){
+        //   return this.book.locations.load(stored);
+        // } else {
+          return this.book.locations.generate(this.props.locationsCharBreak || 600).then((locations) => {
+            // Save out the generated locations to JSON
+            // AsyncStorage.setItem(key, this.book.locations.save());
+            return locations;
+          });
+        // }
+      // })
+
+    });
+  }
   //
   // onRelocated(visibleLocation) {
   //   this._visibleLocation = visibleLocation;
@@ -286,26 +287,26 @@ class Epub extends Component {
   // getRange(cfi) {
   //   return this.book.getRange(cfi);
   // }
-  //
-  // _handleAppStateChange(appState) {
-  //   if (appState === "active") {
-  //     this.active = true;
-  //   }
-  //
-  //   if (appState === "background") {
-  //     this.active = false;
-  //   }
-  //
-  //   if (appState === "inactive") {
-  //     this.active = false;
-  //   }
-  // }
-  //
-  // destroy() {
-  //   if (this.book) {
-  //     this.book.destroy();
-  //   }
-  // }
+
+  _handleAppStateChange(appState) {
+    if (appState === "active") {
+      this.active = true;
+    }
+
+    if (appState === "background") {
+      this.active = false;
+    }
+
+    if (appState === "inactive") {
+      this.active = false;
+    }
+  }
+
+  destroy() {
+    if (this.book) {
+      this.book.destroy();
+    }
+  }
 
   render() {
     return (
@@ -313,10 +314,10 @@ class Epub extends Component {
         ref={(r) => {
           this.rendition = r;
 
-          // if (this.needsOpen) {
-          //   this._openBook.apply(this, this.needsOpen);
-          //   this.needsOpen = undefined;
-          // }
+          if (this.needsOpen) {
+            this._openBook.apply(this, this.needsOpen);
+            this.needsOpen = undefined;
+          }
         }}
         url={this.props.src}
         flow={this.props.flow}

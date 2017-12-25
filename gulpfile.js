@@ -35,32 +35,46 @@ gulp.task("copy:package", function () {
 		.pipe(gulp.dest("./EpubReader/node_modules/epubjs-rn"));
 });
 
-gulp.task("copy:epubjs", function () {
-	return gulp.src(['../epub.js/lib/**/*.js'])
-		.pipe(gulp.dest("./EpubReader/node_modules/epubjs/lib"));
+gulp.task("copy-reader", ["build"], function () {
+  return gulp.src(['./components/**/*.js'])
+    .pipe(gulp.dest("../rnreader/EpubReader/node_modules/epubjs-rn/components"));
 });
 
-gulp.task("copy:epubjs-src", function () {
-	return gulp.src(['../epub.js/src/**/*.js'])
-		.pipe(gulp.dest("./node_modules/epubjs/src"));
+gulp.task("copy-reader:package", function () {
+  return gulp.src(['./package.json'])
+    .pipe(gulp.dest("../rnreader/EpubReader/node_modules/epubjs-rn"));
 });
 
-gulp.task("copy:epubjs-lib", function () {
-	return gulp.src(['../epub.js/lib/**/*.js'])
-		.pipe(gulp.dest("./node_modules/epubjs/lib"));
-});
-
-gulp.task("copy:contents", function () {
-	return gulp.src(['./contents/contents.js','./contents/contents.min.js'])
-		.pipe(gulp.dest("./EpubReader/node_modules/epubjs-rn/contents"));
-});
+// gulp.task("copy:epubjs", function () {
+// 	return gulp.src(['../epub.js/lib/**/*.js'])
+// 		.pipe(gulp.dest("./EpubReader/node_modules/epubjs/lib"));
+// });
+//
+// gulp.task("copy:epubjs-src", function () {
+// 	return gulp.src(['../epub.js/src/**/*.js'])
+// 		.pipe(gulp.dest("./node_modules/epubjs/src"));
+// });
+//
+// gulp.task("copy:epubjs-lib", function () {
+// 	return gulp.src(['../epub.js/lib/**/*.js'])
+// 		.pipe(gulp.dest("./node_modules/epubjs/lib"));
+// });
+//
+// gulp.task("copy:contents", function () {
+// 	return gulp.src(['./contents/contents.js','./contents/contents.min.js'])
+// 		.pipe(gulp.dest("./EpubReader/node_modules/epubjs-rn/contents"));
+// });
 
 gulp.task("watch", function () {
 	return gulp.watch(['./src/**/*.js', './contents/**/*.js'], ['build', 'copy', 'copy:package']);
 });
 
-gulp.task("watch:epubjs", function () {
-	return gulp.watch('../epub.js/lib/**/*.js', ['copy:epubjs']);
+gulp.task("watch-reader", function () {
+  return gulp.watch(['./src/**/*.js', './contents/**/*.js'], ['build', 'copy-reader', 'copy-reader:package']);
 });
+
+// gulp.task("watch:epubjs", function () {
+// 	return gulp.watch('../epub.js/lib/**/*.js', ['copy:epubjs']);
+// });
 
 gulp.task("default", ["build"]);

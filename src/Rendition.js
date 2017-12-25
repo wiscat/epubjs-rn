@@ -153,12 +153,15 @@ class Rendition extends Component {
   }
 
   display(target) {
-    let spine = typeof target === "number" && target;
+    const spine = typeof target === "number" && target;
+    const progress = !spine && target && (target.slice(0, 2) === '0.' || target.slice(0, 3) === '1.0');
 
     if (!this._webviewLoaded) return;
 
     if (spine) {
       this.sendToBridge("display", [{ "spine": spine}]);
+    } else if (progress) {
+      this.sendToBridge("display", [{ "progress": target}]);
     } else if (target) {
       this.sendToBridge("display", [{ "target": target}]);
     } else {
@@ -169,7 +172,7 @@ class Rendition extends Component {
   flow(f) {
     this.sendToBridge("flow", [f]);
   }
-  //
+
   // themes(t) {
   //   this.sendToBridge("themes", [t]);
   // }
@@ -185,20 +188,20 @@ class Rendition extends Component {
   // fontSize(f) {
   //   this.sendToBridge("fontSize", [f]);
   // }
-  //
+
   setLocations(locations) {
     this.locations = locations;
     if (this.isReady) {
       this.sendToBridge("setLocations", [this.locations]);
     }
   }
-  //
-  // reportLocation() {
-  //   if (this.isReady) {
-  //     this.sendToBridge("reportLocation");
-  //   }
-  // }
-  //
+
+  reportLocation() {
+    if (this.isReady) {
+      this.sendToBridge("reportLocation");
+    }
+  }
+
   // highlight (cfiRange, data) {
   //   this.sendToBridge("highlight", [cfiRange, data]);
   // }
@@ -333,10 +336,10 @@ class Rendition extends Component {
       //   this.props.beforeViewRemoved && this.props.beforeViewRemoved(sectionIndex);
       //   break;
       // }
-      // case "ready": {
-      //   this._ready();
-      //   break;
-      // }
+      case "ready": {
+        this._ready();
+        break;
+      }
       default: {
         console.log("msg", decoded);
       }
@@ -362,13 +365,13 @@ class Rendition extends Component {
   //   }
   // }
   //
-  // _ready() {
-  //   this.isReady = true;
-  //   if (this.locations) {
-  //     this.sendToBridge("setLocations", [this.locations]);
-  //   }
-  //   this.props.onDisplayed && this.props.onDisplayed();
-  // }
+  _ready() {
+    this.isReady = true;
+    if (this.locations) {
+      this.sendToBridge("setLocations", [this.locations]);
+    }
+    this.props.onDisplayed && this.props.onDisplayed();
+  }
 
   render() {
     const WebViewer = (Platform.OS === 'ios') ? WKWebView : WebView;

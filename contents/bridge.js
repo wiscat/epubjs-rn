@@ -89,6 +89,9 @@ window.onerror = function (message, file, line, col, error) {
           else if (args.target) {
             target = args.target.toString();
           }
+          else if (args.progress) {
+            target = args.progress.slice(0, 3) === '1.0' ? '1.0' : parseFloat(args.progress);
+          }
           else if (args.spine) {
             target = parseInt(args.spine);
           }
@@ -112,27 +115,27 @@ window.onerror = function (message, file, line, col, error) {
 
           break;
         }
-        // case "setLocations": {
-        //   var locations = decoded.args[0];
-        //   if (book) {
-        //     book.locations.load(locations);
-        //   } else {
-        //     q.push(message);
-        //   }
-        //
-        //   if (rendition) {
-        //     rendition.reportLocation();
-        //   }
-        //   break;
-        // }
-        // case "reportLocation": {
-        //   if (rendition) {
-        //     rendition.reportLocation();
-        //   } else {
-        //     q.push(message);
-        //   }
-        //   break;
-        // }
+        case "setLocations": {
+          var locations = decoded.args[0];
+          if (book) {
+            book.locations.load(locations);
+          } else {
+            q.push(message);
+          }
+
+          if (rendition) {
+            rendition.reportLocation();
+          }
+          break;
+        }
+        case "reportLocation": {
+          if (rendition) {
+            rendition.reportLocation();
+          } else {
+            q.push(message);
+          }
+          break;
+        }
         // case "minSpreadWidth": {
         //   minSpreadWidth = decoded.args;
         //   break;
@@ -462,12 +465,12 @@ window.onerror = function (message, file, line, col, error) {
         }
       });
 
-      // book.ready.then(function(){
-      //   _isReady = true;
-      //
-      //   sendMessage({method:"ready"});
-      //
-      // });
+      book.ready.then(function(){
+        _isReady = true;
+
+        sendMessage({method:"ready"});
+
+      });
 
       window.addEventListener("unload", function () {
         book && book.destroy();
