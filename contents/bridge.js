@@ -426,10 +426,10 @@ window.onerror = function (message, file, line, col, error) {
       //
       }.bind(this));
 
-      // rendition.on("relocated", function(location){
-      //   sendMessage({method:"relocated", location: location});
-      // });
-      //
+      rendition.on("relocated", function(location){
+        sendMessage({method:"relocated", location: location});
+      });
+
       // rendition.on("selected", function (cfiRange) {
       //   preventTap = true;
       //   sendMessage({method:"selected", cfiRange: cfiRange});
@@ -439,7 +439,7 @@ window.onerror = function (message, file, line, col, error) {
       //   preventTap = true;
       //   sendMessage({method:"markClicked", cfiRange: cfiRange, data: data});
       // });
-      //
+
       rendition.on("rendered", function (section) {
         sendMessage({method:"rendered", sectionIndex: section.index});
       });

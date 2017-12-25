@@ -18,12 +18,12 @@ import WKWebView from 'react-native-wkwebview-reborn-fchasen';
 
 import { readFileSync } from "fs";
 
-import sourceMap from 'source-map';
-
-const generator = new sourceMap.SourceMapGenerator({
-  file: "../node_modules/epubjs/dist/epub.min.js",
-  // sourceRoot: "http://example.com/app/js/"
-});
+// import sourceMap from 'source-map';
+//
+// const generator = new sourceMap.SourceMapGenerator({
+//   file: "../node_modules/epubjs/dist/epub.min.js",
+//   // sourceRoot: "http://example.com/app/js/"
+// });
 
 // const URL = require("epubjs/libs/url/url-polyfill.js");
 const POLYFILL = readFileSync(__dirname + "/../node_modules/core-js/client/core.min.js", "utf8");
@@ -201,7 +201,7 @@ class Rendition extends Component {
       this.sendToBridge("reportLocation");
     }
   }
-
+  //
   // highlight (cfiRange, data) {
   //   this.sendToBridge("highlight", [cfiRange, data]);
   // }
@@ -239,7 +239,7 @@ class Rendition extends Component {
   sendToBridge(method, args, promiseId) {
     __DEV__ && console.log('sendToBridge', method, args, promiseId);
 
-    var str = JSON.stringify({
+    const str = JSON.stringify({
       method: method,
       args: args,
       promise: promiseId
@@ -260,17 +260,17 @@ class Rendition extends Component {
   }
 
   _onBridgeMessage(e) {
-    var msg = e.nativeEvent.data;
+    const msg = e.nativeEvent.data;
 
     __DEV__ && console.log('_onBridgeMessage', msg);
 
-    var decoded;
+    let decoded;
     if (typeof msg === "string") {
       decoded = JSON.parse(msg);
     } else {
       decoded = msg; // webkit may pass parsed objects
     }
-    var p;
+    // let p;
 
     switch (decoded.method) {
       case "log": {
@@ -295,14 +295,14 @@ class Rendition extends Component {
         }
         break;
       }
-      // case "relocated": {
-      //   let {location} = decoded;
-      //   this._relocated(location);
-      //   if (!this.state.loaded) {
-      //     this.setState({loaded: true});
-      //   }
-      //   break;
-      // }
+      case "relocated": {
+        let {location} = decoded;
+        this._relocated(location);
+        if (!this.state.loaded) {
+          this.setState({loaded: true});
+        }
+        break;
+      }
       // case "resized": {
       //   let {size} = decoded;
       //   // console.log("resized", size.width, size.height);
@@ -346,13 +346,14 @@ class Rendition extends Component {
     }
   }
 
-  // _relocated(visibleLocation) {
-  //   this._visibleLocation = visibleLocation;
-  //   if (this.props.onRelocated) {
-  //     this.props.onRelocated(visibleLocation, this);
-  //   }
-  // }
-  //
+  _relocated(visibleLocation) {
+    // __DEV__ && console.log('_relocated', visibleLocation, this.props.onRelocated);
+    // this._visibleLocation = visibleLocation;
+    if (this.props.onRelocated) {
+      this.props.onRelocated(visibleLocation);
+    }
+  }
+
   // _selected(cfiRange) {
   //   if (this.props.onSelected) {
   //     this.props.onSelected(cfiRange, this);
@@ -364,7 +365,7 @@ class Rendition extends Component {
   //     this.props.onMarkClicked(cfiRange, data, this);
   //   }
   // }
-  //
+
   _ready() {
     this.isReady = true;
     if (this.locations) {

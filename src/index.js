@@ -6,4 +6,4 @@ module.exports = {
   Epub,
   Rendition,
   Streamer
-}
+};
