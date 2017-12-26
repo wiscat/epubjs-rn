@@ -9,24 +9,11 @@ Getting Started
 To use the components in your own app install via npm
 
 ```bash
-npm install --save epubjs-rn
+npm install --save wiscat/epubjs-rn#develop
 ```
 
-It may be necessary to include the following dependencies to your `package.json`
-to allow link to work automatically
-```
-{
-	"react-native-fetch-blob": "0.10.2",
-	"react-native-fs": "^2.1.0-rc.1",
-	"react-native-orientation": "8fit/react-native-orientation",
-	"react-native-zip-archive": "0.1.0",
-	"react-native-static-server": "0.1.3"
-}
-```
-
-then install and link the required libraries with
+then link the required libraries manual or with
 ```bash
-npm install
 react-native link
 ```
 
@@ -83,24 +70,3 @@ streamer.start("8899")
 		return this.setState({src});
 	});
 ```
-
-Running the example app
--------------------------
-
-Install from NPM or Yarn
-
-```bash
-npm install -g react-native-cli
-npm install
-```
-Then start the iOS or Android App
-
-```bash
-react-native run-ios
-react-native run-android
-```
-
-Other
--------------------------
-
-EPUB is a registered trademark of the [IDPF](http://idpf.org/).
