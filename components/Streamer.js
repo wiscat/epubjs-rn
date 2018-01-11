@@ -24,6 +24,7 @@ EpubStreamer=function(){
 
 function EpubStreamer(opts){_classCallCheck(this,EpubStreamer);
 opts=opts||{};
+this.isCache=opts.isCache===undefined?true:opts.isCache;
 this.port=opts.port||"3"+Math.round(Math.random()*1000);
 this.root=opts.root||"www";
 this.server=new _reactNativeStaticServer2.default(this.port,this.root,{localOnly:true});
@@ -80,7 +81,7 @@ _this2.urls.push(bookUrl);
 _this2.locals.push(url);
 _this2.paths.push(path);
 
-
+res.flush();
 
 return url;
 });
@@ -95,6 +96,9 @@ return _reactNativeFetchBlob2.default.fs.exists(targetPath);
 }},{key:'get',value:function get(
 
 bookUrl){var _this3=this;
+if(!this.isCache){
+return this.add(bookUrl);
+}
 return this.check(bookUrl).
 then(function(exists){
 if(exists){

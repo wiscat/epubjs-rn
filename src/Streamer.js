@@ -24,6 +24,7 @@ class EpubStreamer {
 
   constructor(opts) {
     opts = opts || {};
+    this.isCache = opts.isCache === undefined ? true : opts.isCache;
     this.port = opts.port || "3" + Math.round(Math.random() * 1000);
     this.root = opts.root || "www";
     this.server = new StaticServer(this.port, this.root, {localOnly: true});
@@ -80,7 +81,7 @@ class EpubStreamer {
             this.locals.push(url);
             this.paths.push(path);
 
-            // res.flush();
+            res.flush();
 
             return url;
           })
@@ -95,6 +96,9 @@ class EpubStreamer {
   }
 
   get(bookUrl) {
+    if (!this.isCache) {
+      return this.add(bookUrl);
+    }
     return this.check(bookUrl)
       .then((exists) => {
         if (exists) {
