@@ -6,7 +6,7 @@ var _reactNativeStaticServer=require('react-native-static-server');var _reactNat
 
 var _reactNativeFetchBlob=require('react-native-fetch-blob');var _reactNativeFetchBlob2=_interopRequireDefault(_reactNativeFetchBlob);
 
-var _reactNativeZipArchive=require('react-native-zip-archive');var _reactNativeZipArchive2=_interopRequireDefault(_reactNativeZipArchive);
+var _reactNativeZipArchive=require('react-native-zip-archive');
 
 
 
@@ -60,7 +60,6 @@ this.server.kill();
 }},{key:'add',value:function add(
 
 bookUrl){var _this2=this;
-var uri=new Uri(bookUrl);
 var filename=this.filename(bookUrl);
 
 return _reactNativeFetchBlob2.default.
@@ -74,7 +73,7 @@ var sourcePath=res.path();
 var targetPath=Dirs.DocumentDir+'/'+_this2.root+'/'+filename;
 var url=_this2.serverOrigin+'/'+filename+'/';
 
-return _reactNativeZipArchive2.default.unzip(sourcePath,targetPath).
+return(0,_reactNativeZipArchive.unzip)(sourcePath,targetPath).
 then(function(path){
 
 _this2.urls.push(bookUrl);
