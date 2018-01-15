@@ -1,3 +1,5 @@
+/* @flow */
+
 import {
   AppState
 } from 'react-native';
@@ -20,9 +22,24 @@ if (!global.Blob) {
 
 const Uri = require("epubjs/lib/utils/url");
 
-class EpubStreamer {
+type EpubStreamerProps = {
+  isCache?: boolean,
+  port?: number,
+  root?: string
+};
 
-  constructor(opts) {
+class EpubStreamer {
+  isCache: boolean;
+  port: number | string;
+  root: string
+  server: typeof StaticServer;
+  serverOrigin: string;
+  urls: string[];
+  locals: string[];
+  paths: string[];
+  started: boolean;
+
+  constructor(opts: EpubStreamerProps) {
     opts = opts || {};
     this.isCache = opts.isCache === undefined ? true : opts.isCache;
     this.port = opts.port || "3" + Math.round(Math.random() * 1000);
@@ -60,7 +77,7 @@ class EpubStreamer {
     }
   }
 
-  add(bookUrl) {
+  add(bookUrl: string) {
     const filename = this.filename(bookUrl);
 
     return RNFetchBlob
@@ -88,14 +105,14 @@ class EpubStreamer {
       });
   }
 
-  check(bookUrl) {
+  check(bookUrl: string) {
     const filename = this.filename(bookUrl);
     const targetPath = `${Dirs.DocumentDir}/${this.root}/${filename}`;
 
     return RNFetchBlob.fs.exists(targetPath);
   }
 
-  get(bookUrl) {
+  get(bookUrl: string) {
     if (!this.isCache) {
       return this.add(bookUrl);
     }
@@ -111,12 +128,12 @@ class EpubStreamer {
       })
   }
 
-  filename(bookUrl) {
+  filename(bookUrl: string) {
     let uri = new Uri(bookUrl);
     return uri.filename.replace(".epub", "");
   }
 
-  remove(path) {
+  remove(path: string) {
     return RNFetchBlob.fs.lstat(path)
       .then((stats) => {
         let index = this.paths.indexOf(path);

@@ -28,7 +28,7 @@ import { readFileSync } from "fs";
 // const URL = require("epubjs/libs/url/url-polyfill.js");
 const POLYFILL = readFileSync(__dirname + "/../node_modules/core-js/client/core.min.js", "utf8");
 const EPUBJS = readFileSync(__dirname + "/../node_modules/epubjs/dist/epub.min.js", "utf8");
-const BRIDGE = readFileSync(__dirname + "/../contents/bridge.js", "utf8");
+const BRIDGE = readFileSync(__dirname + "/../bridge/bridge.min.js", "utf8");
 
 const EMBEDDED_HTML = `
 <!DOCTYPE html>
