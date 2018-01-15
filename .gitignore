@@ -42,3 +42,4 @@ android/app/libs
 *.keystore
 
 #components
+bridge/bridge.min.js
